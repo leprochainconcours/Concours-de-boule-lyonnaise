@@ -424,15 +424,16 @@ function showEvent(id) {
         </div>
 
     </div>
-
 ${c.phone
-            ? `<a class="primary wide call-button"
-          href="tel:${c.phone.replace(/\s/g, '')}">
+            ? c.phone.split('|').map(phone => `
+        <a class="primary wide call-button"
+           href="tel:${phone.replace(/\s/g, '')}">
             <span>Appeler ${c.association}</span>
-            <span>${c.phone}</span>
-       </a>`
+            <span>${phone}</span>
+        </a>
+    `).join('')
             : ""
-        }
+}
 <a class="primary wide call-button"
    href="${googleCalendarLink(c)}"
    target="_blank"
