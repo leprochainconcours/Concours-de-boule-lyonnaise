@@ -597,6 +597,7 @@ async function loadGoogleSheet() {
 
         contests = data.contests;
 
+        renderDynamicFilters();
         visibleCount = pageSize; // si tu gardes la pagination
         render();
 
