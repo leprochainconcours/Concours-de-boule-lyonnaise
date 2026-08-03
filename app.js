@@ -432,12 +432,45 @@ ${c.phone
             <span>${c.phone}</span>
        </a>`
             : ""
-}
-
+        }
+<a class="primary wide call-button"
+   href="${googleCalendarLink(c)}"
+   target="_blank"
+   rel="noopener">
+    📅 Ajouter à Google Agenda
+</a>
 </form>`;
 
     dlg.showModal();
 }
+
+function googleCalendarLink(c) {
+
+    const start = new Date(c.date)
+        .toISOString()
+        .replace(/[-:]/g, "")
+        .replace(/\.\d{3}Z$/, "Z");
+
+    const end = new Date(c.date)
+        .toISOString()
+        .replace(/[-:]/g, "")
+        .replace(/\.\d{3}Z$/, "Z");
+
+    const url = new URL("https://calendar.google.com/calendar/render");
+
+    url.searchParams.set("action", "TEMPLATE");
+    url.searchParams.set("text", `${c.capacity} ${c.game} - ${c.association}`);
+    url.searchParams.set("dates", `${start}/${end}`);
+    url.searchParams.set("location", c.place);
+    url.searchParams.set(
+        "details",
+        `Concours de boules lyonnaises\n\nOrganisateur : ${c.association}`
+    );
+
+    return url.toString();
+}
+
+
 function setFilter(type, value) { filters[type] = value; visibleCount = pageSize; render()}
 $('#open-filters').onclick = () => $('#filters-dialog').showModal();
 $('#filter-link').onclick = () => $('#filters-dialog').showModal();
