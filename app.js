@@ -585,6 +585,29 @@ function formatInputDate(date) {
 
 
 
+async function loadGoogleSheet() {
+    if (!API_URL.startsWith('https://')) return;
+
+    try {
+        let response = await fetch(API_URL);
+        let data = await response.json();
+
+        if (!data.success)
+            throw new Error(data.error);
+
+        contests = data.contests;
+
+        visibleCount = pageSize; // si tu gardes la pagination
+        render();
+
+    } catch (error) {
+        console.warn('Impossible de charger les concours Google Sheet :', error);
+    }
+}
+
+render();
+loadGoogleSheet();
+
 function renderDynamicFilters() {
 
     // CBD
