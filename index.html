@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#123c2d" />
+  <title>Boule & Concours</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-shell">
+
+    <section id="accueil" class="hero">
+      <p class="eyebrow">Boules lyonnaises · près de chez vous</p>
+      <h1>Le prochain concours<br><em>vous attend.</em></h1>
+      <p class="hero-copy">Trouvez un concours, contactez l'association et prenez place sur le terrain.</p>
+      <button class="search-cta" id="open-filters"><span>⌕</span><span>Où souhaitez-vous jouer ?</span><strong>›</strong></button>
+      <div class="quick-filters" aria-label="Filtres rapides">
+        <button data-filter="today">Aujourd'hui</button><button data-filter="weekend">Ce week-end</button><button data-filter="nextweekend">Week-end prochain</button>
+      </div>
+    </section>
+
+    <section class="content" aria-label="Liste des concours">
+        <div class="section-title"><div><p class="eyebrow">À l'affiche</p><h2>Concours à venir</h2></div><button class="filter-link" id="filter-link">Filtres <span>☷</span></button></div>
+        <div class="active-filter" id="active-filter" hidden></div>
+        <div class="event-list" id="event-list"></div>
+        <div id="load-more-container"></div>
+    </section>
+
+    <nav class="bottom-nav" aria-label="Navigation principale">
+      <a class="nav-item active" href="#accueil"><span>⌂</span>Accueil</a>
+      <button class="nav-item" id="nav-explore"><span>⌕</span>Explorer</button>
+      <!--<button class="nav-item" data-open-login><span>♙</span>Mon club</button>-->
+    </nav>
+  </main>
+
+  <dialog id="filters-dialog" class="sheet">
+      <form method="dialog">
+ 
+          <div class="sheet-handle"></div>
+          <div class="sheet-head"><h2>Filtrer les concours</h2><button class="icon-close" value="cancel">×</button>
+          </div>
+          <label class="field-label">Association</label>
+          <div class="date-box-input">
+          <input type="text" id="search-association" placeholder="Rechercher une association">
+          </div>
+          <label class="field-label">Date</label>
+          <div class="choice-row">
+              <button type="button" class="choice selected" data-date="all">Toutes les dates</button>
+              <button type="button" class="choice" data-date="today">Aujourd'hui</button>
+              <button type="button" class="choice" data-date="weekend">Ce week-end</button>
+              <button type="button" class="choice" data-date="nextweekend">Week-end prochain</button>
+              <button type="button" class="choice" data-date="range">Période</button>
+          </div>
+          <div id="date-range" class="date-range-hidden">
+              <div class="date-input">
+                  <label>Du</label>
+                  <div class="date-box-input">
+                      <span>📅</span>
+                      <input type="date" id="date-from">
+                  </div>
+              </div>
+
+              <div class="date-input">
+                  <label>Au</label>
+                  <div class="date-box-input">
+                      <span>📅</span>
+                      <input type="date" id="date-to">
+                  </div>
+              </div>
+          </div>
+          <label class="field-label">CBD</label>
+
+          <div class="choice-row" id="CBD-filters">
+          </div>
+          <label class="field-label">Catégorie</label>
+          <div class="choice-row" id="category-filters"></div>
+          <label class="field-label">Public</label>
+          <div class="choice-row" id="audience-filters"></div>  
+          <label class="field-label">Type de jeu</label>
+          <div class="choice-row" id="game-filters"></div> 
+          <label class="field-label">Format du concours</label>
+          <div class="choice-row" id="format-filters"></div>
+          <button class="primary wide" id="apply-filters" value="default">Afficher les concours</button>
+      </form>
+  </dialog>
+
+  <dialog id="event-dialog" class="sheet event-sheet"></dialog>
+
+  <dialog id="login-dialog" class="sheet login-sheet">
+    <form method="dialog">
+      <div class="sheet-handle"></div><div class="sheet-head"><div><p class="eyebrow">Espace organisateur</p><h2>Votre association</h2></div><button class="icon-close" value="cancel">×</button></div>
+      <p class="muted">Connectez-vous pour publier et gérer vos concours.</p>
+      <label>Adresse e-mail<input type="email" placeholder="contact@votre-club.fr" required></label>
+      <label>Mot de passe<input type="password" placeholder="••••••••" required></label>
+      <button class="primary wide" id="login-button" value="default">Se connecter</button>
+      <p class="demo-note">Démo : cliquez sur « Se connecter » pour accéder au tableau de bord.</p>
+    </form>
+  </dialog>
+
+  <section id="dashboard" class="dashboard" hidden>
+    <header class="dashboard-head"><button id="close-dashboard" class="back">‹</button><div><p class="eyebrow">Espace association</p><h1>Bonjour, <em>La Rascasse</em></h1></div><button class="avatar">LR</button></header>
+    <div class="dashboard-main">
+      <div class="dashboard-intro"><p>Gardez vos concours à jour et accueillez plus de joueurs.</p><button class="primary" id="open-add">+ Publier un concours</button></div>
+      <div class="stats"><div><strong id="event-count">0</strong><span>concours publiés</span></div>
+        <div><strong>86</strong><span>places proposées</span></div>
+                        </div><h2>Vos concours</h2><div id="club-events" class="club-events"></div></div>
+  </section>
+
+  <dialog id="add-dialog" class="sheet add-sheet">
+    <form id="contest-form">
+      <div class="sheet-handle"></div><div class="sheet-head"><div><p class="eyebrow">Nouveau concours</p><h2>Les informations</h2></div><button type="button" class="icon-close" id="close-add">×</button></div>
+      <div class="form-grid">
+        <label>Nom du concours<input name="name" required placeholder="Ex. Challenge d'été"></label>
+        <label>Association organisatrice<input name="association" required value="Boule La Rascasse"></label>
+        <label>Début<input name="start" type="datetime-local" required></label><label>Fin<input name="end" type="datetime-local" required></label>
+        <label class="full">Nom<input name="place" required placeholder="Ex. Boulodrome municipal, Lyon"></label>
+        <label>Téléphone<input name="phone" type="tel" required placeholder="04 00 00 00 00"></label><label>Places disponibles<input name="capacity" type="number" min="1" required placeholder="32"></label>
+        <label>Type de concours<select name="format"><option>Poules</option><option>2 tours</option><option>Audiard</option><option>Rien</option></select></label><label>Type de points<select name="points"><option>Propagande</option><option>Promotion</option></select></label>
+        <fieldset class="full"><legend>Catégories (plusieurs choix possibles)</legend><label><input type="checkbox" name="category" value="4ème"> 4ème</label><label><input type="checkbox" name="category" value="3ème"> 3ème</label><label><input type="checkbox" name="category" value="National"> National</label></fieldset>
+        <fieldset class="full"><legend>Type de jeu</legend><label><input type="radio" name="game" value="Simple" required> Simple</label><label><input type="radio" name="game" value="Double"> Double</label><label><input type="radio" name="game" value="Triple"> Triple</label><label><input type="radio" name="game" value="Quadrette"> Quadrette</label></fieldset>
+        <fieldset class="full"><legend>Public</legend><label><input type="radio" name="audience" value="Féminin" required> Féminin</label><label><input type="radio" name="audience" value="Vétéran"> Vétéran</label></fieldset>
+      </div><button class="primary wide">Publier le concours</button>
+    </form>
+  </dialog>
+  <script src="app.js"></script>
+</body>
+</html>
