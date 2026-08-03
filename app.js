@@ -123,11 +123,8 @@ function filterAssociation(c) {
 }
 
 function render() {
-    let today = new Date();
-    today.setHours(0, 0, 0, 0);
     let list = $('#event-list');
     let filtered = contests
-        .filter(c => new Date(c.date) >= today)
         .filter(matches)
         .filter(filterAssociation)
         .sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -587,7 +584,8 @@ function formatInputDate(date) {
 
 async function loadGoogleSheet() {
     if (!API_URL.startsWith('https://')) return;
-
+    $('#event-list').innerHTML =
+        '<p class="muted">Chargement des concours...</p>';
     try {
         let response = await fetch(API_URL);
         let data = await response.json();
@@ -606,7 +604,7 @@ async function loadGoogleSheet() {
     }
 }
 
-render();
+
 loadGoogleSheet();
 
 function renderDynamicFilters() {
