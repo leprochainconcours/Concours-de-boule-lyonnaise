@@ -109,23 +109,6 @@
         <div><strong>86</strong><span>places proposées</span></div>
                         </div><h2>Vos concours</h2><div id="club-events" class="club-events"></div></div>
   </section>
-
-  <dialog id="add-dialog" class="sheet add-sheet">
-    <form id="contest-form">
-      <div class="sheet-handle"></div><div class="sheet-head"><div><p class="eyebrow">Nouveau concours</p><h2>Les informations</h2></div><button type="button" class="icon-close" id="close-add">×</button></div>
-      <div class="form-grid">
-        <label>Nom du concours<input name="name" required placeholder="Ex. Challenge d'été"></label>
-        <label>Association organisatrice<input name="association" required value="Boule La Rascasse"></label>
-        <label>Début<input name="start" type="datetime-local" required></label><label>Fin<input name="end" type="datetime-local" required></label>
-        <label class="full">Nom<input name="place" required placeholder="Ex. Boulodrome municipal, Lyon"></label>
-        <label>Téléphone<input name="phone" type="tel" required placeholder="04 00 00 00 00"></label><label>Places disponibles<input name="capacity" type="number" min="1" required placeholder="32"></label>
-        <label>Type de concours<select name="format"><option>Poules</option><option>2 tours</option><option>Audiard</option><option>Rien</option></select></label><label>Type de points<select name="points"><option>Propagande</option><option>Promotion</option></select></label>
-        <fieldset class="full"><legend>Catégories (plusieurs choix possibles)</legend><label><input type="checkbox" name="category" value="4ème"> 4ème</label><label><input type="checkbox" name="category" value="3ème"> 3ème</label><label><input type="checkbox" name="category" value="National"> National</label></fieldset>
-        <fieldset class="full"><legend>Type de jeu</legend><label><input type="radio" name="game" value="Simple" required> Simple</label><label><input type="radio" name="game" value="Double"> Double</label><label><input type="radio" name="game" value="Triple"> Triple</label><label><input type="radio" name="game" value="Quadrette"> Quadrette</label></fieldset>
-        <fieldset class="full"><legend>Public</legend><label><input type="radio" name="audience" value="Féminin" required> Féminin</label><label><input type="radio" name="audience" value="Vétéran"> Vétéran</label></fieldset>
-      </div><button class="primary wide">Publier le concours</button>
-    </form>
-  </dialog>
   <script src="app.js"></script>
 </body>
 </html>

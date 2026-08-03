@@ -556,11 +556,7 @@ $('#apply-filters').onclick = () => {
     visibleCount = pageSize;
     render();
 };
-document.querySelectorAll('[data-open-login]').forEach(b => b.onclick = () => $('#login-dialog').showModal());
-$('#login-button').onclick = () => setTimeout(() => { $('#dashboard').hidden = false; renderClub() }, 0);
-$('#close-dashboard').onclick = () => $('#dashboard').hidden = true;
-$('#open-add').onclick = () => $('#add-dialog').showModal();
-$('#close-add').onclick = () => $('#add-dialog').close();
+
 
 
 function setDefaultDates() {
@@ -587,36 +583,6 @@ function formatInputDate(date) {
         .substring(0, 10);
 }
 
-function renderClub() { let mine = contests.filter(c => c.association === 'Boule La Rascasse'); $('#event-count').textContent = mine.length; $('#club-events').innerHTML = mine.map(c => `<article class="club-event"><div><b>${c.name}</b><p>${displayDate(c.date)} · ${c.capacity} places</p></div><button data-view="${c.id}">Voir</button></article>`).join('') || '<p class="muted">Pas encore de concours publié.</p>'; document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => showEvent(+b.dataset.view)) }
-async function loadGoogleSheet() {
-
-    if (!API_URL.startsWith('https://'))
-        return;
-
-    try {
-
-        let response = await fetch(API_URL);
-        let data = await response.json();
-
-        if (!data.success)
-            throw new Error(data.error);
-
-        contests = data.contests;
-
-        renderDynamicFilters();
-        render();
-        renderClub();
-
-    }
-    catch (error) {
-        console.warn('Impossible de charger les concours Google Sheet :', error);
-    }
-}
-$('#contest-form').onsubmit = async e => {
-    e.preventDefault(); let f = new FormData(e.target), contest = { id: Date.now(), name: f.get('name'), association: f.get('association'), date: f.get('start'), end: f.get('end'), place: f.get('place'), phone: f.get('phone'), capacity: f.get('capacity'), format: f.get('format'), points: f.get('points'), categories: f.getAll('category'), game: f.get('game'), audience: f.get('audience'), CBD: f.get('CBD') };
-  if(API_URL.startsWith('https://')){try{let response=await fetch(API_URL,{method:'POST',body:JSON.stringify({action:'create',contest})});let data=await response.json();if(!data.success)throw new Error(data.error);contest.id=data.id}catch(error){alert('Le concours n’a pas pu être envoyé à Google Sheet : '+error.message);return}}
-    contests.push(contest); e.target.reset(); $('#add-dialog').close(); visibleCount = pageSize; render(); renderClub()
-}; visibleCount = pageSize; render();loadGoogleSheet();
 
 
 function renderDynamicFilters() {
