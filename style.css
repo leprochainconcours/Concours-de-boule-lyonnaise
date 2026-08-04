@@ -195,6 +195,31 @@ body {
         font-weight: 400;
         color: var(--green)
     }
+.contact-section {
+    margin: 0rem auto;
+    padding: 0rem;
+    text-align: center;
+    background: var(--surface);
+    border-radius: 16px;
+}
+
+    .contact-section p {
+        margin: 0 0 0rem;
+        line-height: 1.5;
+    }
+
+    .contact-section .primary {
+        display: inline-flex;
+    }
+.contact-actions {
+    display: flex;
+    justify-content: center;
+}
+
+    .contact-actions .primary {
+        width: auto;
+        min-width: 280px;
+    }
 
 .quick-filters{
     display: flex;
