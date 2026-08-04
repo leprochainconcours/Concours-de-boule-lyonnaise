@@ -472,6 +472,9 @@ body {
         font-size: 21px;
         line-height: 17px
     }
+.bottom-nav .facebook span {
+    font-size: 15px;
+}
 
     .nav-item.active {
         color: var(--green);
