@@ -135,7 +135,7 @@ function render() {
     list.innerHTML = displayed.length ? displayed.map(c => {
         let d = formatDay(c.date);
         return `<article class="event-card" data-id="${c.id}"><div class="date-box"><strong>${d.day}</strong><span>${d.month}</span></br><span>${new Date(c.date).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} </span></div>
-        <div><h3>${c.capacity} ${c.game} ${c.categories} ${c.audience && c.audience !== 'Non précisé' ? c.audience : ''}</h3><p>
+        <div><h3>${c.capacity == 0 ? c.place : c.capacity} ${c.game} ${c.categories} ${c.audience && c.audience !== 'Non précisé' ? c.audience : ''}</h3><p>
     ${c.format ? c.format + '<br>' : ''}
     ${c.association ? c.association + '<br>' : ''}
     ${c.place ? c.place : ''}
@@ -388,7 +388,7 @@ function showEvent(id) {
         <button class="icon-close">×</button>
     </div>
 
-    <h2>${c.capacity} ${c.game} ${Array.isArray(c.categories) ? c.categories.join(" · ") : ""}</h2>
+    <h2>${c.capacity == 0 ? c.place : c.capacity} ${c.game} ${Array.isArray(c.categories) ? c.categories.join(" · ") : ""}</h2>
 
     <p class="association">
         Organisé par ${c.association}
