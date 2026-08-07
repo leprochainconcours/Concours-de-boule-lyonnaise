@@ -22,6 +22,12 @@ function updateUrl() {
 
     const params = new URLSearchParams();
 
+    const currentEvent = new URLSearchParams(location.search).get("event");
+
+    if (currentEvent) {
+        params.set("event", currentEvent);
+    }
+
     if (filters.date !== "all")
         params.set("date", filters.date);
 
@@ -287,7 +293,9 @@ function render() {
     } else {
         loadMore.innerHTML = '';
     }
-    updateUrl();
+    if (!new URLSearchParams(location.search).has("event")) {
+        updateUrl();
+    }
 }
 
 function removeFilter(index){
@@ -407,7 +415,11 @@ function showEvent(id) {
 
     const c = contests.find(x => String(x.id) === String(id));
     if (!c) return;
-    history.replaceState({}, "", "?event=" + c.id);
+    const url = new URL(window.location.href);
+    url.search = "";
+    url.searchParams.set("event", c.id);
+
+    history.replaceState({}, "", url);
     const d = formatDay(c.date);
     const dlg = $('#event-dialog');
 
