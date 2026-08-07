@@ -18,6 +18,69 @@ let contests = [
 let visibleCount = 20;
 const pageSize = 20;
 
+function updateUrl() {
+
+    const params = new URLSearchParams();
+
+    if (filters.date !== "all")
+        params.set("date", filters.date);
+
+    if (filters.dateFrom)
+        params.set("from", filters.dateFrom);
+
+    if (filters.dateTo)
+        params.set("to", filters.dateTo);
+
+    if (filters.association)
+        params.set("association", filters.association);
+
+    if (filters.category.length)
+        params.set("category", filters.category.join(","));
+
+    if (filters.audience.length)
+        params.set("audience", filters.audience.join(","));
+
+    if (filters.game.length)
+        params.set("game", filters.game.join(","));
+
+    if (filters.CBD.length)
+        params.set("cbd", filters.CBD.join(","));
+
+    if (filters.format.length)
+        params.set("format", filters.format.join(","));
+
+    history.replaceState(
+        {},
+        "",
+        window.location.pathname +
+        (params.toString() ? "?" + params.toString() : "")
+    );
+}
+function loadFiltersFromUrl() {
+
+    const params = new URLSearchParams(location.search);
+
+    filters.date = params.get("date") || "all";
+    filters.dateFrom = params.get("from") || "";
+    filters.dateTo = params.get("to") || "";
+    filters.association = params.get("association") || "";
+
+    filters.category =
+        params.get("category")?.split(",").filter(Boolean) || [];
+
+    filters.audience =
+        params.get("audience")?.split(",").filter(Boolean) || [];
+
+    filters.game =
+        params.get("game")?.split(",").filter(Boolean) || [];
+
+    filters.CBD =
+        params.get("cbd")?.split(",").filter(Boolean) || [];
+
+    filters.format =
+        params.get("format")?.split(",").filter(Boolean) || [];
+}
+
 const $ = s => document.querySelector(s); const month = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
 function formatDay(iso) { let d = new Date(iso); return { day: d.getDate(), month: month[d.getMonth()] } }
 function displayDate(iso) { return new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }).format(new Date(iso)) }
@@ -224,6 +287,7 @@ function render() {
     } else {
         loadMore.innerHTML = '';
     }
+    updateUrl();
 }
 
 function removeFilter(index){
@@ -343,7 +407,7 @@ function showEvent(id) {
 
     const c = contests.find(x => String(x.id) === String(id));
     if (!c) return;
-
+    history.replaceState({}, "", "?event=" + c.id);
     const d = formatDay(c.date);
     const dlg = $('#event-dialog');
 
@@ -440,9 +504,54 @@ ${c.phone
    rel="noopener">
     📅 Ajouter à Google Agenda
 </a>
+<a class="primary wide call-button" id="share-event">
+    📤 Partager ce concours
+</a>
 </form>`;
 
     dlg.showModal();
+    const shareBtn = document.getElementById("share-event");
+
+    shareBtn.onclick = async () => {
+
+        const url = window.location.href;
+
+        const message =
+            `🏆 ${c.capacity == 0 ? c.place : c.capacity} ${c.game} ${Array.isArray(c.categories) ? c.categories.join(" · ") : c.categories}
+
+📅 ${displayDate(c.date)}
+📍 ${c.place}
+🤝 Organisé par ${c.association}
+
+🔗 ${url}
+
+🔎 Trouvez facilement votre prochain concours :
+https://concours-boules-lyonnaises.fr`;
+
+        if (navigator.share) {
+
+            try {
+                await navigator.share({
+                    title: "Concours de boules lyonnaises",
+                    text: message
+                });
+            } catch { }
+
+        } else {
+
+            await navigator.clipboard.writeText(message);
+
+            shareBtn.innerHTML = "✅ Message copié !";
+
+            setTimeout(() => {
+                shareBtn.innerHTML = "📤 Partager ce concours";
+            }, 2000);
+        }
+
+    };
+    dlg.addEventListener("close", () => {
+        history.replaceState({}, "", window.location.pathname);
+    }, { once: true });
 }
 
 function googleCalendarLink(c) {
@@ -628,11 +737,15 @@ async function loadGoogleSheet() {
             throw new Error(data.error);
 
         contests = data.contests;
-
+        loadFiltersFromUrl();
         renderDynamicFilters();
         visibleCount = pageSize; // si tu gardes la pagination
         render();
+        const eventId = new URLSearchParams(location.search).get("event");
 
+        if (eventId) {
+            showEvent(eventId);
+        }
     } catch (error) {
         console.warn('Impossible de charger les concours Google Sheet :', error);
     }
